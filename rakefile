@@ -29,7 +29,7 @@ file "output/totals.csv" do
 					items[item] = Hash[ :qty=>0, :amount=>0.0 ]
 				end
 				items[item][:qty] += qty
-				items[item][:amount] += price * qty
+				items[item][:amount] += (price * qty).round(2)
 			end
 
 		end
