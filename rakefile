@@ -26,7 +26,11 @@ file "output/totals.csv" do
 
 			if paid == "paid" or paid == "authorized" or paid == "pending"
 				qty = row["Lineitem quantity"].to_i
-				item = row["Lineitem name"]
+				#show all variants
+				item = row["Lineitem name"].split("-")[0].strip
+				#group by product parent
+				#item = row["Lineitem name"].split("-")[0].strip
+				puts item
 				price = row["Lineitem price"].to_f
 				if items[item].nil?
 					items[item] = Hash[ :qty=>0, :amount=>0.0 ]
