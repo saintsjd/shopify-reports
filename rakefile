@@ -1,0 +1,45 @@
+require 'csv'
+
+task :default => ["output/totals.csv"]
+
+CLEAN_FILES = FileList['tmp/*','output/*']
+CLEAN_FILES.clear_exclude
+task :clean do
+    rm CLEAN_FILES
+end
+
+file "output/totals.csv" do
+	files = Dir.glob('data/*.csv')
+
+	order_no = nil
+	paid = nil?
+	items = Hash.new
+	files.sort.each do |f|
+		CSV.foreach(f, {:headers => true}) do |row|
+			if row["Name"] != order_no
+				order_no = row["Name"]
+				paid = row["Financial Status"]
+			end 
+
+			if paid == "paid" or paid == "authorized" or paid == "pending"
+				qty = row["Lineitem quantity"].to_i
+				item = row["Lineitem name"]
+				price = row["Lineitem price"].to_f
+				if items[item].nil?
+					items[item] = Hash[ :qty=>0, :amount=>0.0 ]
+				end
+				items[item][:qty] += qty
+				items[item][:amount] += price * qty
+			end
+
+		end
+	end
+
+	CSV.open("output/totals.csv", "wb") do |csv|
+		csv << [ "Item", "Quantity", "Value" ]
+		items.sort_by { |key, value| value[:qty] }.reverse.each do |key,value|
+			csv << [ key, value[:qty], value[:amount] ]
+		end
+	end
+
+end
