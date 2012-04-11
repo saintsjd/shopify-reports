@@ -1,0 +1,7 @@
+Usage
+1) clone this repo
+2) export your orders from shopify to CSV in the admin
+3) place all csv files in a folder named data
+4) run rake 
+5) view your item top sellers in the output folder
+

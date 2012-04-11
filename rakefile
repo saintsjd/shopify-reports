@@ -2,6 +2,9 @@ require 'csv'
 
 task :default => ["output/totals.csv"]
 
+directory "output"
+directory "data"
+
 CLEAN_FILES = FileList['tmp/*','output/*']
 CLEAN_FILES.clear_exclude
 task :clean do
